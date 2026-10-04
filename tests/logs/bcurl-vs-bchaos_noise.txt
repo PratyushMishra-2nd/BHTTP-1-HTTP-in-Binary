@@ -1,0 +1,83 @@
+# bchaos -noise -> bserve
+== Bodies and framing
+PASS  1    GET / and GET /index.html identical
+PASS  1    GET / exit 0
+PASS  1    GET / 115 bytes, sha256
+PASS  1    GET / headers
+PASS  1    GET / 1 DATA frame(s)
+PASS  1    GET / frame sizes [115], END_STREAM last only
+PASS  1    GET /index.html exit 0
+PASS  1    GET /index.html 115 bytes, sha256
+PASS  1    GET /index.html headers
+PASS  1    GET /index.html 1 DATA frame(s)
+PASS  1    GET /index.html frame sizes [115], END_STREAM last only
+PASS  2    GET /docs exit 0
+PASS  2    GET /docs 97 bytes, sha256
+PASS  2    GET /docs headers
+PASS  2    GET /docs 1 DATA frame(s)
+PASS  2    GET /docs frame sizes [97], END_STREAM last only
+PASS  2    GET /docs/ exit 0
+PASS  2    GET /docs/ 97 bytes, sha256
+PASS  2    GET /docs/ headers
+PASS  2    GET /docs/ 1 DATA frame(s)
+PASS  2    GET /docs/ frame sizes [97], END_STREAM last only
+PASS  3    GET /assets/site.css exit 0
+PASS  3    GET /assets/site.css 54 bytes, sha256
+PASS  3    GET /assets/site.css headers
+PASS  3    GET /assets/site.css 1 DATA frame(s)
+PASS  3    GET /assets/site.css frame sizes [54], END_STREAM last only
+PASS  4    GET /unicode/naïve.txt exit 0
+PASS  4    GET /unicode/naïve.txt 11 bytes, sha256
+PASS  4    GET /unicode/naïve.txt headers
+PASS  4    GET /unicode/naïve.txt 1 DATA frame(s)
+PASS  4    GET /unicode/naïve.txt frame sizes [11], END_STREAM last only
+PASS  5    GET /binary.bin exit 0
+PASS  5    GET /binary.bin 261 bytes, sha256
+PASS  5    GET /binary.bin headers
+PASS  5    GET /binary.bin 1 DATA frame(s)
+PASS  5    GET /binary.bin frame sizes [261], END_STREAM last only
+PASS  -    GET /pixel.png exit 0
+PASS  -    GET /pixel.png 69 bytes, sha256
+PASS  -    GET /pixel.png headers
+PASS  -    GET /pixel.png 1 DATA frame(s)
+PASS  -    GET /pixel.png frame sizes [69], END_STREAM last only
+PASS  6    GET /edge-16383.bin exit 0
+PASS  6    GET /edge-16383.bin 16383 bytes, sha256
+PASS  6    GET /edge-16383.bin headers
+PASS  6    GET /edge-16383.bin 1 DATA frame(s)
+PASS  6    GET /edge-16383.bin frame sizes [16383], END_STREAM last only
+PASS  7    GET /edge-16384.bin exit 0
+PASS  7    GET /edge-16384.bin 16384 bytes, sha256
+PASS  7    GET /edge-16384.bin headers
+PASS  7    GET /edge-16384.bin 1 DATA frame(s)
+PASS  7    GET /edge-16384.bin frame sizes [16384], END_STREAM last only
+PASS  8    GET /edge-16385.bin exit 0
+PASS  8    GET /edge-16385.bin 16385 bytes, sha256
+PASS  8    GET /edge-16385.bin headers
+PASS  8    GET /edge-16385.bin 2 DATA frame(s)
+PASS  8    GET /edge-16385.bin frame sizes [16384, 1], END_STREAM last only
+PASS  9    GET /edge-65536.bin exit 0
+PASS  9    GET /edge-65536.bin 65536 bytes, sha256
+PASS  9    GET /edge-65536.bin headers
+PASS  9    GET /edge-65536.bin 4 DATA frame(s)
+PASS  9    GET /edge-65536.bin frame sizes [16384, 16384, 16384, 16384], END_STREAM last only
+PASS  10   GET /empty.txt exit 0
+PASS  10   GET /empty.txt 0 bytes, sha256
+PASS  10   GET /empty.txt headers
+PASS  10   GET /empty.txt 0 DATA frame(s)
+PASS  10   GET /empty.txt END_STREAM on RESPONSE, no DATA
+== Errors
+PASS  11   GET /nope -> 404, exit 1, empty body, END_STREAM on RESPONSE
+PASS  12   GET /a:b -> 400, exit 1
+PASS  12   GET /../x -> 400, exit 1
+PASS  12   GET /a\b -> 400, exit 1
+PASS  12   GET //x -> 400, exit 1
+PASS  12   GET /con -> 400, exit 1
+PASS  12   GET /index.html. -> 400, exit 1
+== Connection behaviour
+PASS  13   requests after 400/404 work on the same connection
+PASS  14   exit status non-zero after 404 and 400
+PASS  15   ten requests: stream IDs 1..10 on the wire
+PASS  15   ten requests: every body intact, in order
+PASS  16   client stops after last END_STREAM (does not wait for close)
+== 78 passed, 0 failed

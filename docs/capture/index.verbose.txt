@@ -1,0 +1,31 @@
+*   connected to localhost:9000
+--> frame 1  REQUEST  stream=1  flags=END_STREAM  length=36
+    header   00 00 00 24 01 01 00 00 00 00 00 01
+    payload
+      00000000  01 00 0B 2F 69 6E 64 65  78 2E 68 74 6D 6C 01 00  |.../index.html..|
+      00000010  00 08 78 2D 63 6C 69 65  6E 74 00 08 62 63 75 72  |..x-client..bcur|
+      00000020  6C 2D 70 79                                       |l-py|
+    decoded  method=GET  path=/index.html  headers=1
+             [id 0] x-client: bcurl-py
+<-- frame 2  RESPONSE  stream=1  flags=none  length=32
+    header   00 00 00 20 02 00 00 00 00 00 00 01
+    payload
+      00000000  00 C8 03 01 00 09 74 65  78 74 2F 68 74 6D 6C 02  |......text/html.|
+      00000010  00 03 31 31 35 03 00 08  62 73 65 72 76 65 2F 31  |..115...bserve/1|
+    decoded  status=200  headers=3
+             [id 1] content-type: text/html
+             [id 2] content-length: 115
+             [id 3] server: bserve/1
+<-- frame 3  DATA  stream=1  flags=END_STREAM  length=115
+    header   00 00 00 73 03 01 00 00 00 00 00 01
+    payload
+      00000000  3C 21 64 6F 63 74 79 70  65 20 68 74 6D 6C 3E 0A  |<!doctype html>.|
+      00000010  3C 74 69 74 6C 65 3E 42  48 54 54 50 2F 31 20 63  |<title>BHTTP/1 c|
+      00000020  6F 6E 66 6F 72 6D 61 6E  63 65 20 73 65 72 76 65  |onformance serve|
+      00000030  72 3C 2F 74 69 74 6C 65  3E 0A 3C 68 31 3E 49 74  |r</title>.<h1>It|
+      00000040  20 77 6F 72 6B 73 2E 3C  2F 68 31 3E 0A 3C 70 3E  | works.</h1>.<p>|
+      00000050  53 65 72 76 65 64 20 6F  76 65 72 20 61 20 62 69  |Served over a bi|
+      00000060  6E 61 72 79 20 70 72 6F  74 6F 63 6F 6C 2E 3C 2F  |nary protocol.</|
+      00000070  70 3E 0A                                          |p>.|
+*   stream 1 complete: status 200, 115 body bytes
+*   connection closed

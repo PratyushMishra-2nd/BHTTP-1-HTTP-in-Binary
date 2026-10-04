@@ -1,0 +1,10 @@
+#!/bin/sh
+# ./bcurl -v localhost:9000/index.html
+dir=$(dirname "$0")
+for py in python3 python; do
+    if "$py" -c 'import sys; sys.exit(sys.version_info < (3, 7))' >/dev/null 2>&1; then
+        exec "$py" "$dir/bcurl.py" "$@"
+    fi
+done
+echo "bcurl: needs Python 3.7 or newer" >&2
+exit 2
