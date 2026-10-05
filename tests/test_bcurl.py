@@ -335,6 +335,24 @@ class ResponseTests(unittest.TestCase):
             self.assertEqual(f.read(), b"body")
         self.assertFalse(os.path.exists(bad) or os.path.exists(bad + ".part"))
 
+    def test_output_file_removed_on_interrupt(self):
+        # Ctrl-C or a write error mid-body is not an ExchangeFailed, but must not publish a partial file.
+        real = bcurl.Connection.exchange
+        for exc in (KeyboardInterrupt, OSError):
+            def exchange(conn, path, headers, write, exc=exc):
+                def broken(data):
+                    write(data)
+                    raise exc("interrupted")
+                return real(conn, path, headers, broken)
+            target = os.path.join(tempfile.mkdtemp(), "f")
+            bcurl.Connection.exchange = exchange
+            try:
+                with self.assertRaises(exc):
+                    self.fetch([lambda s: ok(s, b"x" * 1000)], args=("-o", target, "127.0.0.1:PORT/f"))
+            finally:
+                bcurl.Connection.exchange = real
+            self.assertFalse(os.path.exists(target) or os.path.exists(target + ".part"), exc.__name__)
+
     def test_timeout(self):
         srv = FakeServer([b""])
         try:

@@ -24,8 +24,8 @@ bcurl [-v] [-H "name: value"]... [-o FILE] [-t SECONDS] [--dump PREFIX] HOST:POR
 |---|---|
 | `-v` | Hexdump every frame sent and received to stderr, from the exact bytes on the socket, with decoded fields |
 | `-H "name: value"` | Add a request header. Table names (`content-type`, …) go out by ID; others as lowercase custom headers |
-| `-o FILE` | Write the body to FILE. The file only appears if the exchange succeeds, so a truncated download never looks complete |
-| `-t SECONDS` | How long to wait on each read (default 30) |
+| `-o FILE` | Write the body to FILE. The file only appears if the exchange completes (including a 4xx/5xx answer, whose body may be empty), so a truncated or interrupted download never looks complete |
+| `-t SECONDS` | How long to wait on each read (default 30). Per read, not a total deadline: a server trickling bytes can keep the download going |
 | `--dump PREFIX` | Also save raw bytes to `PREFIX.request.bin` / `PREFIX.response.bin` (for `tools/annotate.py`) |
 
 Several paths on one command line are fetched **in order over one connection**,

@@ -615,6 +615,7 @@ def run(argv, stdout=None, stderr=None):
     if opts["dump"]:
         dump = (open(opts["dump"] + ".request.bin", "wb"), open(opts["dump"] + ".response.bin", "wb"))
     worst = EXIT_OK
+    completed = False  # anything that escapes the loop (Ctrl-C, disk full) must not publish the file
     conn = None
     try:
         conn = Connection(host, port, opts["timeout"], trace, dump)
@@ -625,6 +626,7 @@ def run(argv, stdout=None, stderr=None):
                 stderr.write("bcurl: %s -> %d\n" % (show(path), status))
                 worst = EXIT_HTTP_ERROR
         conn.close()
+        completed = True
     except ConnectionFault as e:
         stderr.write("bcurl: protocol fault, sending ERROR and closing: %s\n" % e)
         conn.send_error_and_close(e.code, e.wire_message)
@@ -639,10 +641,10 @@ def run(argv, stdout=None, stderr=None):
             f.close()
         if out_path:
             out.close()
-            if worst == EXIT_FAILED:
-                os.remove(tmp_path)
-            else:
+            if completed:
                 os.replace(tmp_path, out_path)
+            else:
+                os.remove(tmp_path)
     return worst
 
 
